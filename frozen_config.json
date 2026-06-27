@@ -1,0 +1,56 @@
+{
+  "frozen_name": "high_only_severity_aware_pure_pinn",
+  "source_folder": "Codex - First",
+  "dataset": "fatigue_svecd_sdr_dense_state.csv",
+  "dataset_tag": "_sdr_dense_state",
+  "feature_list": "feature_cols_sdr_dense_state_obs30.txt",
+  "feature_tag": "_sdr_dense_state_obs30",
+  "target_type": "ltpp_disjoint_fatigue_severity_states",
+  "state_targets": [
+    "C_PCT_LOW_ONLY",
+    "C_PCT_MOD_ONLY",
+    "C_PCT_HIGH_ONLY"
+  ],
+  "cumulative_internal_targets": [
+    "C_PCT_L",
+    "C_PCT_M",
+    "C_PCT_H"
+  ],
+  "model_family": "pure_svecd_pinn",
+  "best_variant": "state_transition_w0.1_t2_traj0.25",
+  "env": {
+    "SVECD_TAG": "_sdr_dense_state",
+    "SVECD_FEATURE_TAG": "_sdr_dense_state_obs30",
+    "SVECD_ANCHOR": "1",
+    "SVECD_HYBRID": "0",
+    "SVECD_ENSEMBLE": "1",
+    "STATE_PINN_W_PHYS_LIST": "0.1",
+    "STATE_PINN_W_TRANS_LIST": "2",
+    "STATE_PINN_W_TRAJ_LIST": "0.25",
+    "STATE_PINN_TRAJ_PAIR_MODE": "all",
+    "STATE_PINN_BAND_W": "0.7,1.2,3.0",
+    "STATE_PINN_W_TOTAL": "0.4",
+    "STATE_PINN_W_ONSET": "0.15",
+    "STATE_PINN_W_CRACKED": "0.5",
+    "STATE_PINN_HUBER_DELTA": "1.0",
+    "OMP_NUM_THREADS": "1"
+  },
+  "selected_single_run_metrics": {
+    "temporal_R2log_total": 0.7887468934059143,
+    "cold_unseen_R2log_total": 0.1999956301986485,
+    "first_anchor_R2log_total": 0.5167743542579937,
+    "rolling_anchor_R2log_total": 0.749352728304661
+  },
+  "seed_stability_mean_metrics": {
+    "temporal_R2log_total": 0.7799473524093627,
+    "cold_unseen_R2log_total": 0.17430223706630538,
+    "first_anchor_R2log_total": 0.5209922611710165,
+    "rolling_anchor_R2log_total": 0.7458058917022876
+  },
+  "notes": [
+    "Trainer does not serialize weights; this is a reproducible frozen recipe plus dataset, not a checkpoint.",
+    "The full SDR cache is not copied here. The frozen generated dataset is included.",
+    "data_cache/ANALYSIS_DIS_AC.csv is included so the final severity-state target maker can be audited/re-run from the dense source dataset."
+  ]
+}
+

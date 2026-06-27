@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this frozen PINN artifact, please cite both this repository and the original FHWA LTPP / InfoPave data source."
+title: "S-VECD PINN for LTPP Fatigue Cracking"
+version: "1.0.0"
+date-released: "2026-06-27"
+authors:
+  - given-names: "Arya"
+    family-names: "Daneshvar"
+abstract: "Frozen reproducibility artifact for a severity-aware pure S-VECD physics-informed neural network trained on LTPP-derived fatigue-cracking severity-state targets."
+keywords:
+  - pavement fatigue cracking
+  - LTPP
+  - S-VECD
+  - physics-informed neural network
+license: MIT
+repository-code: "https://github.com/arya-daneshvar/svecd-pinn-ltpp-fatigue"
+preferred-citation:
+  type: article
+  title: "LATER_TO_BE_CHANGED"
+  authors:
+    - given-names: "Arya"
+      family-names: "Daneshvar"
+  year: 2026
