@@ -16,7 +16,7 @@ license: MIT
 repository-code: "https://github.com/arya-daneshvar/svecd-pinn-ltpp-fatigue"
 preferred-citation:
   type: article
-  title: "LATER_TO_BE_CHANGED"
+  title: "Severity-aware S-VECD physics-informed neural networks for LTPP fatigue-cracking prediction"
   authors:
     - given-names: "Arya"
       family-names: "Daneshvar"

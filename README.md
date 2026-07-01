@@ -1,8 +1,13 @@
 # Severity-Aware S-VECD PINN for LTPP Fatigue Cracking
 
-This repository freezes the best pure PINN model from the thesis fatigue-cracking experiments for reproducible comparison against other modeling streamlines and data-degradation scenarios.
+This repository is the paper-facing reproducibility artifact for the LTPP
+fatigue-cracking PINN pipeline. It freezes the processed dataset, feature list,
+training code, configuration, and reference outputs for a severity-aware S-VECD
+physics-informed neural network.
 
-The frozen model is a severity-aware S-VECD physics-informed neural network trained on LTPP-derived fatigue cracking severity states.
+The goal is that a reader can clone the repository, inspect the exact artifact
+used for the reported results, and rerun the main validation workflow without
+needing the larger local thesis workspace.
 
 ## Frozen Model
 
@@ -23,7 +28,9 @@ The frozen model is a severity-aware S-VECD physics-informed neural network trai
 - Physics weight: `w_phys=0.10`
 - Transition weight: `w_trans=2`
 
-See [FROZEN_MODEL_CARD.md](FROZEN_MODEL_CARD.md) and [frozen_config.json](frozen_config.json) for the locked configuration.
+See [FROZEN_MODEL_CARD.md](FROZEN_MODEL_CARD.md),
+[ARTIFACT_MANIFEST.md](ARTIFACT_MANIFEST.md), and
+[frozen_config.json](frozen_config.json) for the locked configuration.
 
 ## Results Snapshot
 
@@ -39,15 +46,18 @@ Seed-stability mean across five seeds:
 |---|---:|---:|---:|---:|
 | frozen severity-aware PINN | 0.780 | 0.174 | 0.521 | 0.746 |
 
-Detailed outputs are in `outputs/`, and supporting experiment reports are in `reports/`.
+Detailed reference outputs are in `outputs/`, and supporting experiment reports
+are in `reports/`.
 
 ## Repository Layout
 
 ```text
 .
 ├── README.md
+├── ARTIFACT_MANIFEST.md
 ├── FROZEN_MODEL_CARD.md
 ├── frozen_config.json
+├── check_artifact.py
 ├── run_frozen_best.py
 ├── train_severity_state_pinn.py
 ├── train_models.py
@@ -73,7 +83,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+For a closer match to the environment used when this artifact was prepared, see
+`requirements-lock.txt`.
+
 ## Reproduce
+
+First, verify that the frozen files and reference outputs are present:
+
+```bash
+python3 check_artifact.py
+```
 
 Temporal-only quick check:
 
@@ -88,6 +107,9 @@ python3 run_frozen_best.py --parts all --suffix _frozen_full
 ```
 
 The trainer writes results to `outputs_severity_state_pinn_sdr_dense_state<suffix>/`.
+
+For the complete command sequence and expected reference metrics, see
+[REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 ## Data Provenance
 
@@ -108,3 +130,5 @@ Before publication, create a GitHub release and archive it with Zenodo or OSF to
 
 This repository freezes the dataset, code, configuration, and validation outputs. It does not include serialized trained weights because the trainer was designed to report reproducible evaluation runs rather than save checkpoints.
 
+Regenerated output folders are intentionally ignored by Git unless they are
+curated into `outputs/` as reference results.

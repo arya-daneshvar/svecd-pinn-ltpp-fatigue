@@ -2,11 +2,13 @@
 
 ## Frozen Reference
 
-This folder freezes the best current pure PINN from `Codex - First` for downstream comparisons against other modeling streamlines and data-degradation experiments.
+This repository freezes the selected pure PINN from the thesis experiments for
+paper reproduction and downstream comparisons against other modeling
+streamlines and data-degradation experiments.
 
 The frozen model is:
 
-- **Name:** `high_only` severity-aware pure PINN
+- **Name:** `high_only_severity_aware_pure_pinn`
 - **Dataset:** `fatigue_svecd_sdr_dense_state.csv`
 - **Feature list:** `feature_cols_sdr_dense_state_obs30.txt`
 - **Target:** disjoint LTPP fatigue severity states
@@ -67,6 +69,8 @@ High-severity anchored behavior is the main reason to prefer `high_only`:
 
 ## Folder Contents
 
+- `ARTIFACT_MANIFEST.md`: inventory of included and excluded reproducibility files.
+- `check_artifact.py`: dependency-free completeness check for the frozen artifact.
 - `run_frozen_best.py`: stable runner for the frozen model.
 - `train_severity_state_pinn.py`: frozen trainer.
 - `train_models.py`: shared PINN/data utilities used by the trainer.
@@ -81,6 +85,12 @@ High-severity anchored behavior is the main reason to prefer `high_only`:
 
 ## Reproduce The Frozen Model
 
+Completeness check:
+
+```bash
+python3 check_artifact.py
+```
+
 Temporal-only quick check:
 
 ```bash
@@ -93,7 +103,8 @@ Full validation:
 python3 run_frozen_best.py --parts all --suffix _frozen_full
 ```
 
-The trainer does not currently serialize weights. This frozen reference is therefore a reproducible recipe and dataset freeze, not a saved checkpoint.
+The trainer does not currently serialize weights. This frozen reference is
+therefore a reproducible recipe and dataset freeze, not a saved checkpoint.
 
 ## Intended Use
 
@@ -107,4 +118,3 @@ Use this folder as the stable PINN reference when comparing against:
 - feature-missingness scenarios.
 
 The next experiments should run degradation conditions against this frozen PINN and the competing streamlines without changing the frozen model configuration.
-

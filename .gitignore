@@ -9,6 +9,8 @@ venv/
 /outputs_severity_state_pinn*/
 /outputs_svecd*/
 /outputs_robustness*/
+/outputs_feature_pruning_state*/
+/outputs_severity_loss_sweep*/
 
 # Local scratch files.
 *.log
