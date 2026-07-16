@@ -1,0 +1,35 @@
+{
+  "source": "final_validation/final_validation_predictions.csv",
+  "models": [
+    "Frozen pure PINN",
+    "XGBoost",
+    "Anchored persistence"
+  ],
+  "onset_threshold": "total cracking > 0%",
+  "horizon_year_bins": [
+    "<=2 y",
+    ">2-4 y",
+    ">4-6 y",
+    ">6-10 y",
+    ">10 y"
+  ],
+  "survey_step_bins": [
+    "1 survey",
+    "2 surveys",
+    "3 surveys",
+    "4+ surveys"
+  ],
+  "dominant_rule": "largest disjoint state; ties assigned to higher severity",
+  "total_bins": [
+    "0%",
+    ">0-1%",
+    ">1-5%",
+    ">5-10%",
+    ">10%"
+  ],
+  "min_r2": "n>=3 and observed variance >1e-12",
+  "bootstrap_replicates": 1000,
+  "bootstrap_seed": 20260716,
+  "catastrophic_threshold": "absolute total-cracking error >10 percentage points; prespecified as a large error on the 0-100% area scale",
+  "runtime_seconds": 348.6708929538727
+}

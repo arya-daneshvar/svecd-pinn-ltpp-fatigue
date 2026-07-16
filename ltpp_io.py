@@ -31,10 +31,10 @@ warnings.simplefilter("ignore")
 # --------------------------------------------------------------------------------------
 # Paths
 # --------------------------------------------------------------------------------------
-BASE = "/Users/arya/Documents/Dr. Golroo/009 - Thesis/01 - FATIGUE"
-SDR = os.path.join(BASE, "01 - LTPP", "SDR")
+BASE = os.environ.get("LTPP_PROJECT_ROOT", os.path.dirname(os.path.abspath(__file__)))
+SDR = os.environ.get("LTPP_SDR_ROOT", os.path.join(BASE, "01 - LTPP", "SDR"))
 # OUTDIR is the folder containing this file, so the pipeline is self-contained and works in any
-# copy (Claude - Third / Fourth / Fifth ...).  Raw SDR data stays shared at BASE.
+# copy. Raw SDR data can be supplied with LTPP_SDR_ROOT.
 OUTDIR = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(OUTDIR, "data_cache")
 BAKCAL_CSV = os.path.join(SDR, "SDR39 - BACKCALCULATION", "export_csv")

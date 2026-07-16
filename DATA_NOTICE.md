@@ -20,6 +20,8 @@ The repository includes:
 - `fatigue_svecd_sdr_dense_state.csv`
 - `data_cache/ANALYSIS_DIS_AC.csv`
 - feature-list and data-dictionary files used by the frozen model
+- `final_validation/final_validation_predictions.csv`
+- `final_validation/limited_data_predictions.csv`
 
 The final model dataset is `fatigue_svecd_sdr_dense_state.csv`.
 
@@ -33,3 +35,6 @@ Users should follow applicable FHWA/LTPP/InfoPave terms, attribution expectation
 
 The full raw SDR cache is not included. The frozen generated model dataset is included, and `data_cache/ANALYSIS_DIS_AC.csv` is included to make the final severity-state target construction auditable.
 
+The archived prediction files contain derived model outputs and row identifiers
+needed for verification; they do not replace or redistribute the complete raw
+LTPP Standard Data Release.

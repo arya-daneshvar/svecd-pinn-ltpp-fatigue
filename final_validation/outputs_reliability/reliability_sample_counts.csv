@@ -1,0 +1,175 @@
+stratification,subgroup,protocol,model,n_rows,n_sections
+horizon,<=2 y,first_anchor,Anchored persistence,298,181
+horizon,>2-4 y,first_anchor,Anchored persistence,392,213
+horizon,>4-6 y,first_anchor,Anchored persistence,362,213
+horizon,>6-10 y,first_anchor,Anchored persistence,580,225
+horizon,>10 y,first_anchor,Anchored persistence,327,127
+horizon,<=2 y,first_anchor,Frozen pure PINN,298,181
+horizon,>2-4 y,first_anchor,Frozen pure PINN,392,213
+horizon,>4-6 y,first_anchor,Frozen pure PINN,362,213
+horizon,>6-10 y,first_anchor,Frozen pure PINN,580,225
+horizon,>10 y,first_anchor,Frozen pure PINN,327,127
+horizon,<=2 y,first_anchor,XGBoost,298,181
+horizon,>2-4 y,first_anchor,XGBoost,392,213
+horizon,>4-6 y,first_anchor,XGBoost,362,213
+horizon,>6-10 y,first_anchor,XGBoost,580,225
+horizon,>10 y,first_anchor,XGBoost,327,127
+horizon,<=2 y,rolling_anchor,Anchored persistence,1541,276
+horizon,>2-4 y,rolling_anchor,Anchored persistence,340,193
+horizon,>4-6 y,rolling_anchor,Anchored persistence,74,72
+horizon,>6-10 y,rolling_anchor,Anchored persistence,4,4
+horizon,<=2 y,rolling_anchor,Frozen pure PINN,1541,276
+horizon,>2-4 y,rolling_anchor,Frozen pure PINN,340,193
+horizon,>4-6 y,rolling_anchor,Frozen pure PINN,74,72
+horizon,>6-10 y,rolling_anchor,Frozen pure PINN,4,4
+horizon,<=2 y,rolling_anchor,XGBoost,1541,276
+horizon,>2-4 y,rolling_anchor,XGBoost,340,193
+horizon,>4-6 y,rolling_anchor,XGBoost,74,72
+horizon,>6-10 y,rolling_anchor,XGBoost,4,4
+horizon,<=2 y,temporal,Anchored persistence,189,189
+horizon,>2-4 y,temporal,Anchored persistence,77,77
+horizon,>4-6 y,temporal,Anchored persistence,10,10
+horizon,>6-10 y,temporal,Anchored persistence,1,1
+horizon,<=2 y,temporal,Frozen pure PINN,189,189
+horizon,>2-4 y,temporal,Frozen pure PINN,77,77
+horizon,>4-6 y,temporal,Frozen pure PINN,10,10
+horizon,>6-10 y,temporal,Frozen pure PINN,1,1
+horizon,<=2 y,temporal,XGBoost,189,189
+horizon,>2-4 y,temporal,XGBoost,77,77
+horizon,>4-6 y,temporal,XGBoost,10,10
+horizon,>6-10 y,temporal,XGBoost,1,1
+survey_steps,1 survey,first_anchor,Anchored persistence,298,298
+survey_steps,2 surveys,first_anchor,Anchored persistence,276,276
+survey_steps,3 surveys,first_anchor,Anchored persistence,246,246
+survey_steps,4+ surveys,first_anchor,Anchored persistence,1139,234
+survey_steps,1 survey,first_anchor,Frozen pure PINN,298,298
+survey_steps,2 surveys,first_anchor,Frozen pure PINN,276,276
+survey_steps,3 surveys,first_anchor,Frozen pure PINN,246,246
+survey_steps,4+ surveys,first_anchor,Frozen pure PINN,1139,234
+survey_steps,1 survey,first_anchor,XGBoost,298,298
+survey_steps,2 surveys,first_anchor,XGBoost,276,276
+survey_steps,3 surveys,first_anchor,XGBoost,246,246
+survey_steps,4+ surveys,first_anchor,XGBoost,1139,234
+survey_steps,1 survey,rolling_anchor,Anchored persistence,1959,298
+survey_steps,1 survey,rolling_anchor,Frozen pure PINN,1959,298
+survey_steps,1 survey,rolling_anchor,XGBoost,1959,298
+survey_steps,1 survey,temporal,Anchored persistence,277,277
+survey_steps,1 survey,temporal,Frozen pure PINN,277,277
+survey_steps,1 survey,temporal,XGBoost,277,277
+observed_severity,no cracking,first_anchor,Anchored persistence,880,250
+observed_severity,low-dominant,first_anchor,Anchored persistence,778,211
+observed_severity,moderate-dominant,first_anchor,Anchored persistence,222,93
+observed_severity,high-dominant,first_anchor,Anchored persistence,79,37
+observed_severity,no cracking,first_anchor,Frozen pure PINN,880,250
+observed_severity,low-dominant,first_anchor,Frozen pure PINN,778,211
+observed_severity,moderate-dominant,first_anchor,Frozen pure PINN,222,93
+observed_severity,high-dominant,first_anchor,Frozen pure PINN,79,37
+observed_severity,no cracking,first_anchor,XGBoost,880,250
+observed_severity,low-dominant,first_anchor,XGBoost,778,211
+observed_severity,moderate-dominant,first_anchor,XGBoost,222,93
+observed_severity,high-dominant,first_anchor,XGBoost,79,37
+observed_severity,no cracking,rolling_anchor,Anchored persistence,880,250
+observed_severity,low-dominant,rolling_anchor,Anchored persistence,778,211
+observed_severity,moderate-dominant,rolling_anchor,Anchored persistence,222,93
+observed_severity,high-dominant,rolling_anchor,Anchored persistence,79,37
+observed_severity,no cracking,rolling_anchor,Frozen pure PINN,880,250
+observed_severity,low-dominant,rolling_anchor,Frozen pure PINN,778,211
+observed_severity,moderate-dominant,rolling_anchor,Frozen pure PINN,222,93
+observed_severity,high-dominant,rolling_anchor,Frozen pure PINN,79,37
+observed_severity,no cracking,rolling_anchor,XGBoost,880,250
+observed_severity,low-dominant,rolling_anchor,XGBoost,778,211
+observed_severity,moderate-dominant,rolling_anchor,XGBoost,222,93
+observed_severity,high-dominant,rolling_anchor,XGBoost,79,37
+observed_severity,no cracking,temporal,Anchored persistence,64,64
+observed_severity,low-dominant,temporal,Anchored persistence,137,137
+observed_severity,moderate-dominant,temporal,Anchored persistence,50,50
+observed_severity,high-dominant,temporal,Anchored persistence,26,26
+observed_severity,no cracking,temporal,Frozen pure PINN,64,64
+observed_severity,low-dominant,temporal,Frozen pure PINN,137,137
+observed_severity,moderate-dominant,temporal,Frozen pure PINN,50,50
+observed_severity,high-dominant,temporal,Frozen pure PINN,26,26
+observed_severity,no cracking,temporal,XGBoost,64,64
+observed_severity,low-dominant,temporal,XGBoost,137,137
+observed_severity,moderate-dominant,temporal,XGBoost,50,50
+observed_severity,high-dominant,temporal,XGBoost,26,26
+anchor_condition,no cracking,first_anchor,Anchored persistence,864,242
+anchor_condition,low,first_anchor,Anchored persistence,762,211
+anchor_condition,moderate,first_anchor,Anchored persistence,122,49
+anchor_condition,high,first_anchor,Anchored persistence,211,87
+anchor_condition,no cracking,first_anchor,Frozen pure PINN,864,242
+anchor_condition,low,first_anchor,Frozen pure PINN,762,211
+anchor_condition,moderate,first_anchor,Frozen pure PINN,122,49
+anchor_condition,high,first_anchor,Frozen pure PINN,211,87
+anchor_condition,no cracking,first_anchor,XGBoost,864,242
+anchor_condition,low,first_anchor,XGBoost,762,211
+anchor_condition,moderate,first_anchor,XGBoost,122,49
+anchor_condition,high,first_anchor,XGBoost,211,87
+anchor_condition,no cracking,rolling_anchor,Anchored persistence,823,234
+anchor_condition,low,rolling_anchor,Anchored persistence,713,217
+anchor_condition,moderate,rolling_anchor,Anchored persistence,244,126
+anchor_condition,high,rolling_anchor,Anchored persistence,179,94
+anchor_condition,no cracking,rolling_anchor,Frozen pure PINN,823,234
+anchor_condition,low,rolling_anchor,Frozen pure PINN,713,217
+anchor_condition,moderate,rolling_anchor,Frozen pure PINN,244,126
+anchor_condition,high,rolling_anchor,Frozen pure PINN,179,94
+anchor_condition,no cracking,rolling_anchor,XGBoost,823,234
+anchor_condition,low,rolling_anchor,XGBoost,713,217
+anchor_condition,moderate,rolling_anchor,XGBoost,244,126
+anchor_condition,high,rolling_anchor,XGBoost,179,94
+anchor_condition,no cracking,temporal,Anchored persistence,57,57
+anchor_condition,low,temporal,Anchored persistence,131,131
+anchor_condition,moderate,temporal,Anchored persistence,51,51
+anchor_condition,high,temporal,Anchored persistence,38,38
+anchor_condition,no cracking,temporal,Frozen pure PINN,57,57
+anchor_condition,low,temporal,Frozen pure PINN,131,131
+anchor_condition,moderate,temporal,Frozen pure PINN,51,51
+anchor_condition,high,temporal,Frozen pure PINN,38,38
+anchor_condition,no cracking,temporal,XGBoost,57,57
+anchor_condition,low,temporal,XGBoost,131,131
+anchor_condition,moderate,temporal,XGBoost,51,51
+anchor_condition,high,temporal,XGBoost,38,38
+total_cracking,0%,first_anchor,Anchored persistence,880,250
+total_cracking,>0-1%,first_anchor,Anchored persistence,329,131
+total_cracking,>1-5%,first_anchor,Anchored persistence,322,121
+total_cracking,>5-10%,first_anchor,Anchored persistence,151,76
+total_cracking,>10%,first_anchor,Anchored persistence,277,96
+total_cracking,0%,first_anchor,Frozen pure PINN,880,250
+total_cracking,>0-1%,first_anchor,Frozen pure PINN,329,131
+total_cracking,>1-5%,first_anchor,Frozen pure PINN,322,121
+total_cracking,>5-10%,first_anchor,Frozen pure PINN,151,76
+total_cracking,>10%,first_anchor,Frozen pure PINN,277,96
+total_cracking,0%,first_anchor,XGBoost,880,250
+total_cracking,>0-1%,first_anchor,XGBoost,329,131
+total_cracking,>1-5%,first_anchor,XGBoost,322,121
+total_cracking,>5-10%,first_anchor,XGBoost,151,76
+total_cracking,>10%,first_anchor,XGBoost,277,96
+total_cracking,0%,rolling_anchor,Anchored persistence,880,250
+total_cracking,>0-1%,rolling_anchor,Anchored persistence,329,131
+total_cracking,>1-5%,rolling_anchor,Anchored persistence,322,121
+total_cracking,>5-10%,rolling_anchor,Anchored persistence,151,76
+total_cracking,>10%,rolling_anchor,Anchored persistence,277,96
+total_cracking,0%,rolling_anchor,Frozen pure PINN,880,250
+total_cracking,>0-1%,rolling_anchor,Frozen pure PINN,329,131
+total_cracking,>1-5%,rolling_anchor,Frozen pure PINN,322,121
+total_cracking,>5-10%,rolling_anchor,Frozen pure PINN,151,76
+total_cracking,>10%,rolling_anchor,Frozen pure PINN,277,96
+total_cracking,0%,rolling_anchor,XGBoost,880,250
+total_cracking,>0-1%,rolling_anchor,XGBoost,329,131
+total_cracking,>1-5%,rolling_anchor,XGBoost,322,121
+total_cracking,>5-10%,rolling_anchor,XGBoost,151,76
+total_cracking,>10%,rolling_anchor,XGBoost,277,96
+total_cracking,0%,temporal,Anchored persistence,64,64
+total_cracking,>0-1%,temporal,Anchored persistence,46,46
+total_cracking,>1-5%,temporal,Anchored persistence,56,56
+total_cracking,>5-10%,temporal,Anchored persistence,31,31
+total_cracking,>10%,temporal,Anchored persistence,80,80
+total_cracking,0%,temporal,Frozen pure PINN,64,64
+total_cracking,>0-1%,temporal,Frozen pure PINN,46,46
+total_cracking,>1-5%,temporal,Frozen pure PINN,56,56
+total_cracking,>5-10%,temporal,Frozen pure PINN,31,31
+total_cracking,>10%,temporal,Frozen pure PINN,80,80
+total_cracking,0%,temporal,XGBoost,64,64
+total_cracking,>0-1%,temporal,XGBoost,46,46
+total_cracking,>1-5%,temporal,XGBoost,56,56
+total_cracking,>5-10%,temporal,XGBoost,31,31
+total_cracking,>10%,temporal,XGBoost,80,80

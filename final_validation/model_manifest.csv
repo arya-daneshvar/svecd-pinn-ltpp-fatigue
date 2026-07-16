@@ -1,0 +1,7 @@
+model,role,configuration
+Frozen pure PINN,primary,state_transition_w0.1_t2_traj0.25; high_only loss
+XGBoost,conventional,locked prior mainstream comparison parameters
+CatBoost,conventional,prespecified compact baseline; unavailable if import fails
+HistGradientBoosting,conventional,locked prior mainstream comparison parameters
+Anchored persistence,engineering baseline,carry anchor severity state forward
+PINN + CatBoost residual hybrid (secondary),secondary hybrid,temporal only; log-state residual correction

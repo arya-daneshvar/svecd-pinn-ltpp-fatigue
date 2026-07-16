@@ -1,0 +1,12 @@
+{
+  "method": "paired cluster percentile bootstrap",
+  "cluster": "SECTION_ID",
+  "replicates": 2000,
+  "seed": 20260714,
+  "ci": [
+    2.5,
+    97.5
+  ],
+  "multiplicity": "row expansion per sampled cluster draw",
+  "runtime_seconds": 105.66888689994812
+}

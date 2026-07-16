@@ -35,6 +35,12 @@ REQUIRED_FILES = [
     "data_cache/ANALYSIS_DIS_AC.csv",
     "outputs/outputs_severity_state_pinn_sdr_dense_state_obs30_traj_all_loss_high_only_full/temporal_state_sweep.csv",
     "outputs/outputs_robustness_seed_stability/seed_stability_summary.csv",
+    "final_validation/final_validation_predictions.csv",
+    "final_validation/limited_data_predictions.csv",
+    "final_validation/FINAL_VALIDATION_RESULTS.md",
+    "final_validation/validation_utils.py",
+    "final_validation/representative_frozen_pinn_trajectories.png",
+    "reports/EQUATION_AUDIT.md",
 ]
 
 
@@ -75,6 +81,8 @@ def main() -> int:
     print(f"Selected variant: {config['best_variant']}")
     print(f"Reference temporal R2log_total: {float(temporal_row['R2log_total']):.6f}")
     print(f"Reference temporal OnsetAUC: {float(temporal_row['OnsetAUC']):.6f}")
+    prediction_rows = count_lines(ROOT / "final_validation/final_validation_predictions.csv") - 1
+    print(f"Archived final-validation predictions: {prediction_rows:,} rows")
     print("Run `python3 run_frozen_best.py --parts temporal --suffix _reproduce_temporal` to regenerate the quick check.")
     return 0
 

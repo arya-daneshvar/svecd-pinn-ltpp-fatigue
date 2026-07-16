@@ -7,7 +7,7 @@ full exploratory thesis workspace.
 
 | path | role |
 |---|---|
-| `fatigue_svecd_sdr_dense_state.csv` | Frozen model-ready dataset, 2,879 rows plus header. |
+| `fatigue_svecd_sdr_dense_state.csv` | Frozen processed dataset, 2,879 rows plus header; 2,285 rows pass the trainer's model-ready filters. |
 | `fatigue_svecd_sdr_dense_state.parquet` | Same frozen dataset in Parquet format. |
 | `feature_cols_sdr_dense_state_obs30.txt` | Frozen 41-feature model input list. |
 | `frozen_config.json` | Machine-readable selected model configuration and reference metrics. |
@@ -19,13 +19,16 @@ full exploratory thesis workspace.
 | `build_severity_state_dataset.py` | Disjoint low/moderate/high target-construction script. |
 | `data_cache/ANALYSIS_DIS_AC.csv` | Raw LTPP distress table cached for auditing severity-state target construction. |
 | `outputs/` | Curated reference outputs from the frozen run and robustness checks. |
-| `reports/` | Short reports summarizing supporting ablations and selection decisions. |
+| `final_validation/` | Post-freeze validation scripts, row-level predictions, compact uncertainty summaries, robustness/reliability outputs, and publication figures. |
+| `reports/` | Supporting ablations, selection decisions, and the implementation equation audit. |
 
 ## What Is Not Included
 
 - The full local thesis workspace.
 - The full raw SDR cache used during exploratory feature construction.
 - Serialized neural-network checkpoints.
+- The two 100+ MB raw bootstrap-replicate matrices; compact summaries,
+  confidence intervals, configurations, and figures are included instead.
 - Every exploratory experiment attempted before selecting the frozen model.
 
 ## Main Reproduction Target
@@ -71,6 +74,8 @@ Five-seed stability mean:
    in `outputs/outputs_severity_state_pinn_sdr_dense_state_obs30_traj_all_loss_high_only_full/`.
 5. Run `python3 run_frozen_best.py --parts all --suffix _reproduce_full` for the
    full validation suite.
+6. Inspect `final_validation/final_validation_predictions.csv` or run the
+   post-freeze validation scripts from `final_validation/`.
 
 The trainer is stochastic. Small numerical differences are expected across
 hardware, PyTorch versions, and random seeds.

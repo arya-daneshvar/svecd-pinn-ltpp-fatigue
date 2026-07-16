@@ -1,0 +1,4 @@
+SECTION_ID,target_quantile,quantile_terminal_value,observed_terminal_value,forecast_row_count,eligibility_count
+48_0164,0.25,1.1615947,1.1881961,5,199
+40_0123,0.5,5.2148085,5.2148085,11,199
+30_0113,0.75,14.980898,15.038661,15,199

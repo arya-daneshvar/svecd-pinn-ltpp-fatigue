@@ -46,8 +46,10 @@ Seed-stability mean across five seeds:
 |---|---:|---:|---:|---:|
 | frozen severity-aware PINN | 0.780 | 0.174 | 0.521 | 0.746 |
 
-Detailed reference outputs are in `outputs/`, and supporting experiment reports
-are in `reports/`.
+Detailed frozen-run outputs are in `outputs/`. The `final_validation/` directory
+contains row-level out-of-sample predictions, uncertainty summaries, robustness
+and reliability analyses, publication figures, and the scripts used to generate
+them. Supporting experiment and equation-audit reports are in `reports/`.
 
 ## Repository Layout
 
@@ -68,6 +70,7 @@ are in `reports/`.
 ├── feature_cols_sdr_dense_state_obs30.txt
 ├── data_cache/ANALYSIS_DIS_AC.csv
 ├── outputs/
+├── final_validation/
 └── reports/
 ```
 
@@ -108,6 +111,15 @@ python3 run_frozen_best.py --parts all --suffix _frozen_full
 
 The trainer writes results to `outputs_severity_state_pinn_sdr_dense_state<suffix>/`.
 
+Post-freeze validation and publication figures can be regenerated from the
+archived predictions or recomputed from the frozen model:
+
+```bash
+cd final_validation
+python3 run_all_final_validations.py --resume
+python3 plot_representative_frozen_pinn_trajectories.py
+```
+
 For the complete command sequence and expected reference metrics, see
 [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
@@ -128,7 +140,11 @@ Before publication, create a GitHub release and archive it with Zenodo or OSF to
 
 ## Note On Checkpoints
 
-This repository freezes the dataset, code, configuration, and validation outputs. It does not include serialized trained weights because the trainer was designed to report reproducible evaluation runs rather than save checkpoints.
+This repository freezes the dataset, code, configuration, row-level predictions,
+and validation outputs. It does not include serialized trained weights because
+the trainer was designed to report reproducible evaluation runs rather than save
+checkpoints. The frozen model is therefore an exact retraining recipe, not a
+binary checkpoint.
 
 Regenerated output folders are intentionally ignored by Git unless they are
 curated into `outputs/` as reference results.
