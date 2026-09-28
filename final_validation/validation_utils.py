@@ -33,6 +33,7 @@ os.environ.setdefault("STATE_PINN_W_TOTAL", "0.4")
 os.environ.setdefault("STATE_PINN_W_ONSET", "0.15")
 os.environ.setdefault("STATE_PINN_W_CRACKED", "0.5")
 os.environ.setdefault("STATE_PINN_HUBER_DELTA", "1.0")
+os.environ.setdefault("STATE_PINN_SPLIT_LOCAL_DENSE", "1")
 
 import numpy as np
 import pandas as pd
@@ -260,7 +261,8 @@ def fit_frozen(train_idx: np.ndarray, test_idx: np.ndarray, anchor_on: bool, see
                use_trajectory: bool = True):
     """Fit the locked model. Optional arrays are corruption inputs, not tuning knobs."""
     set_seed(seed)
-    Xall = fp.tm.build_X(anchor_on=anchor_on).copy() if Xall_override is None else Xall_override.copy()
+    Xall = (fp.split_local_dense_matrix(train_idx, anchor_on=anchor_on)
+            if Xall_override is None else Xall_override.copy())
     imp = SimpleImputer(strategy="median").fit(Xall[train_idx])
     imp._final_validation_fit_rows = np.asarray(train_idx).copy()
     scl = __import__("sklearn.preprocessing", fromlist=["StandardScaler"]).StandardScaler().fit(imp.transform(Xall[train_idx]))
@@ -271,7 +273,7 @@ def fit_frozen(train_idx: np.ndarray, test_idx: np.ndarray, anchor_on: bool, see
             ys = old_s.copy(); ys[train_idx] = y_train
             yc = state_to_cum(ys)
             fp.Y_STATE, fp.Y_CUM = ys.astype(np.float32), yc.astype(np.float32)
-        traj = fp.make_trajectory_data(train_idx, imp, scl) if use_trajectory else None
+        traj = fp.make_trajectory_data(train_idx, imp, scl, Xall) if use_trajectory else None
         var = fp.Variant("state_transition_w0.1_t2_traj0.25", .1, 2., seed, .25)
         model, _ = fp.train_variant(Xtr, fp.Y_STATE[train_idx], fp.Y_CUM[train_idx],
             fp.tm.EPS_R[train_idx], fp.tm.DN[train_idx], fp.tm.groups[train_idx],
@@ -307,7 +309,7 @@ def generate_protocol_predictions(smoke: bool = False, resume: bool = True) -> p
             model, imp, scl, Xall = fit_frozen(tr, te, True, 0)
             ps, po = predict_frozen_temporal(model, imp, scl, Xall, te)
             rows.append(prediction_frame(protocol, "Frozen pure PINN", te, anchors, ps, po))
-            X = fp.tm.build_X(anchor_on=True)
+            X = Xall
             for name, (p, prob) in fit_tabular(X[tr], X[te], fp.Y_STATE[tr], 0).items():
                 rows.append(prediction_frame(protocol, name, te, anchors, p, prob))
             pp, ppo = persistence_prediction(te, anchors, tr)
@@ -326,8 +328,8 @@ def generate_protocol_predictions(smoke: bool = False, resume: bool = True) -> p
                 rows.append(prediction_frame(protocol, "PINN + CatBoost residual hybrid (secondary)", te, anchors, ph, po))
         else:
             gkf = GroupKFold(n_splits=2 if smoke else 5)
-            Xcold = fp.tm.build_X(anchor_on=False); Xroll = fp.tm.build_X(anchor_on=True)
-            first = fp.first_indices(); Xfirst = fp.fixed_anchor_matrix(first)
+            Xcold = fp.tm.build_X(anchor_on=False)
+            first = fp.first_indices()
             split_iter = gkf.split(Xcold, fp.Y_TOTAL, fp.tm.groups)
             for fold, (tr, held) in enumerate(split_iter, 1):
                 if protocol == "cold_start":
@@ -335,15 +337,18 @@ def generate_protocol_predictions(smoke: bool = False, resume: bool = True) -> p
                 else:
                     te = np.asarray([i for i in held if first[i] != i], int)
                     anchors = first[te] if protocol == "first_anchor" else fp.PREV[te]
-                    Xscenario = Xfirst if protocol == "first_anchor" else Xroll; anchor_on = True
+                    anchor_on = True
                 model, imp, scl, Xtrain = fit_frozen(tr, te, anchor_on, fold - 1, use_trajectory=(protocol != "cold_start"))
                 if protocol == "cold_start":
                     Xe = scl.transform(imp.transform(Xtrain[te])).astype(np.float32)
                     ps, _ = fp.predict_absolute(model, Xe); po = onset_probability(model, Xe)
+                    Xscenario = Xtrain
                 else:
+                    Xscenario = (fp.fixed_anchor_matrix(first, Xtrain)
+                                 if protocol == "first_anchor" else Xtrain)
                     ps, po = predict_frozen_anchor(model, imp, scl, te, anchors, Xscenario)
                 rows.append(prediction_frame(protocol, "Frozen pure PINN", te, anchors, ps, po, fold))
-                Xtab = Xscenario if protocol != "cold_start" else Xcold
+                Xtab = Xscenario
                 for name, (p, prob) in fit_tabular(Xtab[tr], Xtab[te], fp.Y_STATE[tr], fold - 1).items():
                     rows.append(prediction_frame(protocol, name, te, anchors, p, prob, fold))
                 pp, ppo = persistence_prediction(te, anchors, tr)
@@ -360,7 +365,7 @@ def generate_limited_predictions(smoke: bool = False, resume: bool = True) -> pd
         return pd.read_csv(LIMITED_PREDICTIONS, parse_dates=["SURVEY_DATE", "anchor_survey_date"])
     tr, te = fp.temporal_split(); anchors = fp.PREV[te]
     fractions = [1.0] if smoke else [1.0, .5, .2, .1]
-    rows=[]; X=fp.tm.build_X(anchor_on=True)
+    rows=[]
     train_sections=np.array(sorted(pd.unique(fp.tm.groups[tr])))
     for frac in fractions:
         repeats=[0] if frac==1 else ([0] if smoke else [0,1,2])
@@ -374,7 +379,7 @@ def generate_limited_predictions(smoke: bool = False, resume: bool = True) -> pd
             model,imp,scl,Xall=fit_frozen(tri,te,True,rep)
             ps,po=predict_frozen_temporal(model,imp,scl,Xall,te)
             rows.append(prediction_frame("limited_data","Frozen pure PINN",te,anchors,ps,po,0,frac,rep))
-            for name,(p,prob) in fit_tabular(X[tri],X[te],fp.Y_STATE[tri],rep).items():
+            for name,(p,prob) in fit_tabular(Xall[tri],Xall[te],fp.Y_STATE[tri],rep).items():
                 rows.append(prediction_frame("limited_data",name,te,anchors,p,prob,0,frac,rep))
             pp,ppo=persistence_prediction(te,anchors,tri)
             rows.append(prediction_frame("limited_data","Anchored persistence",te,anchors,pp,ppo,0,frac,rep))
@@ -541,7 +546,8 @@ def qc_checks(pred: pd.DataFrame | None = None) -> list[dict]:
     tr,te=fp.temporal_split()
     check("temporal split rows disjoint",lambda: (_ for _ in ()).throw(AssertionError()) if set(tr)&set(te) else None)
     check("section IDs separated in held-section protocols",lambda: _assert_groupfold_separation())
-    check("preprocessing fitted on training only",lambda: SimpleImputer(strategy="median").fit(fp.tm.build_X(True)[tr]))
+    check("split-local dense reconstruction enabled",lambda: (_ for _ in ()).throw(AssertionError()) if not fp.SPLIT_LOCAL_DENSE else None)
+    check("preprocessing fitted on training only",lambda: _assert_training_only_preprocessing(tr))
     check("no test target used in fitting, imputation, corruption, or calibration",lambda: _assert_no_test_target_path())
     check("bootstrap is clustered and multiplicity preserved",lambda: _qc_bootstrap())
     check("same corruption realizations used across compared models",lambda: _assert_corruption_manifest(),major=True)
@@ -562,6 +568,11 @@ def _qc_bootstrap():
 def _assert_groupfold_separation():
     gkf=GroupKFold(n_splits=5)
     for tr,te in gkf.split(fp.tm.build_X(False),fp.Y_TOTAL,fp.tm.groups): assert not (set(fp.tm.groups[tr])&set(fp.tm.groups[te]))
+def _assert_training_only_preprocessing(tr):
+    X=fp.split_local_dense_matrix(tr,True)
+    imp=SimpleImputer(strategy="median").fit(X[tr])
+    scl=__import__("sklearn.preprocessing",fromlist=["StandardScaler"]).StandardScaler().fit(imp.transform(X[tr]))
+    assert int(imp.n_features_in_)==X.shape[1] and int(scl.n_features_in_)==X.shape[1]
 def _assert_no_test_target_path():
     # Frozen preprocessors receive X[train] only; calibration analysis is metric-only and does not refit probabilities.
     tr,te=fp.temporal_split(); assert not np.isin(te,tr).any(); assert "fit(" not in calibration_metrics.__doc__ if calibration_metrics.__doc__ else True

@@ -3,6 +3,8 @@
   "feature_tag": "_sdr_dense_state_obs30",
   "multiband_anchor": false,
   "self_anchor_baseline": false,
+  "split_local_dense": true,
+  "seed_offset": 0,
   "trajectory_pair_mode": "all",
   "trajectory_max_pairs": 20000,
   "loss": {

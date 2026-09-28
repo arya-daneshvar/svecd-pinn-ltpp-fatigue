@@ -59,6 +59,7 @@ OUT.mkdir(exist_ok=True)
 RUN_PARTS = os.environ.get("STATE_PINN_RUN_PARTS", "all").lower()
 SELF_ANCHOR_BASELINE = os.environ.get("STATE_PINN_SELF_ANCHOR_BASELINE", "0") == "1"
 SEED_OFFSET = int(os.environ.get("STATE_PINN_SEED_OFFSET", "0"))
+SPLIT_LOCAL_DENSE = os.environ.get("STATE_PINN_SPLIT_LOCAL_DENSE", "1") == "1"
 
 EPOCHS = int(os.environ.get("STATE_PINN_EPOCHS", "650"))
 LR = float(os.environ.get("STATE_PINN_LR", "0.002"))
@@ -161,8 +162,46 @@ def temporal_split() -> tuple[np.ndarray, np.ndarray]:
     return np.where(~te_mask)[0], np.where(te_mask)[0]
 
 
-def scaled_matrices(tr: np.ndarray, te: np.ndarray, anchor_on: bool):
+def split_local_dense_matrix(tr: np.ndarray, anchor_on: bool) -> np.ndarray:
+    """Rebuild selected dense predictors from STRICT_ values using training rows only."""
     Xall = tm.build_X(anchor_on=anchor_on)
+    if not SPLIT_LOCAL_DENSE:
+        return Xall
+
+    frame = tm.df
+    train = frame.iloc[tr].copy()
+    apply = frame.copy()
+    section_col = "PHYSICAL_SECTION_ID" if "PHYSICAL_SECTION_ID" in frame.columns else "SECTION_ID"
+    train_year = pd.to_datetime(train["SURVEY_DATE"], errors="coerce").dt.year
+    apply_year = pd.to_datetime(apply["SURVEY_DATE"], errors="coerce").dt.year
+
+    for col_idx, feature in enumerate(tm.FEATURES):
+        source = f"STRICT_{feature}"
+        if source not in frame.columns:
+            continue
+        train_values = pd.to_numeric(train[source], errors="coerce")
+        result = pd.to_numeric(apply[source], errors="coerce").copy()
+        section_median = train_values.groupby(train[section_col]).median()
+        result = result.fillna(apply[section_col].map(section_median))
+        state_year_median = train_values.groupby(
+            [train["STATE_CODE"], train_year], dropna=False
+        ).median()
+        state_year_fill = pd.Series(
+            [state_year_median.get((state, year), np.nan)
+             for state, year in zip(apply["STATE_CODE"], apply_year)],
+            index=apply.index,
+        )
+        result = result.fillna(state_year_fill)
+        state_median = train_values.groupby(train["STATE_CODE"]).median()
+        result = result.fillna(apply["STATE_CODE"].map(state_median))
+        global_median = train_values.median()
+        result = result.fillna(0.0 if pd.isna(global_median) else global_median)
+        Xall[:, col_idx] = result.to_numpy(np.float32)
+    return Xall.astype(np.float32)
+
+
+def scaled_matrices(tr: np.ndarray, te: np.ndarray, anchor_on: bool):
+    Xall = split_local_dense_matrix(tr, anchor_on=anchor_on)
     imp = SimpleImputer(strategy="median").fit(Xall[tr])
     scl = StandardScaler().fit(imp.transform(Xall[tr]))
     return (
@@ -178,8 +217,11 @@ def transform_indices(Xall: np.ndarray, imp: SimpleImputer, scl: StandardScaler,
     return scl.transform(imp.transform(Xall[idx])).astype(np.float32)
 
 
-def anchored_rows_matrix(row_idx: np.ndarray, anchor_idx: np.ndarray) -> np.ndarray:
-    x = tm.build_X(anchor_on=True)[row_idx].copy()
+def anchored_rows_matrix(
+    row_idx: np.ndarray, anchor_idx: np.ndarray, base_matrix: np.ndarray | None = None
+) -> np.ndarray:
+    source = tm.build_X(anchor_on=True) if base_matrix is None else base_matrix
+    x = source[row_idx].copy()
     col = {c: tm.FEATURES.index(c) for c in tm.FEATURES}
     for j, suffix in enumerate(["L", "M", "H"]):
         name = f"LAST_OBS_CPCT_{suffix}"
@@ -228,12 +270,21 @@ def trajectory_pairs(global_idx: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return anchors, futures
 
 
-def make_trajectory_data(global_idx: np.ndarray, imp: SimpleImputer, scl: StandardScaler):
+def make_trajectory_data(
+    global_idx: np.ndarray,
+    imp: SimpleImputer,
+    scl: StandardScaler,
+    base_matrix: np.ndarray | None = None,
+):
     anchors, futures = trajectory_pairs(global_idx)
     if len(futures) == 0:
         return None
-    Xfuture = scl.transform(imp.transform(anchored_rows_matrix(futures, anchors))).astype(np.float32)
-    Xanchor = scl.transform(imp.transform(anchored_rows_matrix(anchors, anchors))).astype(np.float32)
+    Xfuture = scl.transform(
+        imp.transform(anchored_rows_matrix(futures, anchors, base_matrix))
+    ).astype(np.float32)
+    Xanchor = scl.transform(
+        imp.transform(anchored_rows_matrix(anchors, anchors, base_matrix))
+    ).astype(np.float32)
     row_w = 1.0 + W_CRACKED * (Y_STATE[futures].sum(axis=1) > 0).astype(np.float32)
     return {
         "Xfuture": Xfuture,
@@ -450,8 +501,8 @@ def metrics(name: str, pred_state: np.ndarray, pred_cum: np.ndarray, te: np.ndar
 def run_temporal_sweep() -> tuple[pd.DataFrame, Variant]:
     tr, te = temporal_split()
     Xtr, Xte, Xall, imp, scl = scaled_matrices(tr, te, anchor_on=True)
-    Xtr_self = transform_indices(self_anchor_matrix(), imp, scl, tr) if SELF_ANCHOR_BASELINE else None
-    traj_data = make_trajectory_data(tr, imp, scl) if any(w > 0 for w in W_TRAJ_LIST) else None
+    Xtr_self = transform_indices(self_anchor_matrix(Xall), imp, scl, tr) if SELF_ANCHOR_BASELINE else None
+    traj_data = make_trajectory_data(tr, imp, scl, Xall) if any(w > 0 for w in W_TRAJ_LIST) else None
     if traj_data is not None:
         print(f"Trajectory pairs ({TRAJ_PAIR_MODE}): {traj_data['n_pairs']}", flush=True)
     variants = []
@@ -522,8 +573,10 @@ def first_indices() -> np.ndarray:
     return first
 
 
-def fixed_anchor_matrix(anchor_idx: np.ndarray) -> np.ndarray:
-    x = tm.build_X(anchor_on=True).copy()
+def fixed_anchor_matrix(
+    anchor_idx: np.ndarray, base_matrix: np.ndarray | None = None
+) -> np.ndarray:
+    x = (tm.build_X(anchor_on=True) if base_matrix is None else base_matrix).copy()
     valid = np.where(anchor_idx >= 0)[0]
     if len(valid) == 0:
         return x.astype(np.float32)
@@ -540,8 +593,8 @@ def fixed_anchor_matrix(anchor_idx: np.ndarray) -> np.ndarray:
     return x.astype(np.float32)
 
 
-def self_anchor_matrix() -> np.ndarray:
-    return fixed_anchor_matrix(np.arange(len(tm.df), dtype=int))
+def self_anchor_matrix(base_matrix: np.ndarray | None = None) -> np.ndarray:
+    return fixed_anchor_matrix(np.arange(len(tm.df), dtype=int), base_matrix)
 
 
 def predict_transition_with_anchor(pinn, eval_idx: np.ndarray, anchor_idx: np.ndarray, Xall: np.ndarray, imp, scl, Xanchor: np.ndarray | None = None):
@@ -561,9 +614,6 @@ def predict_transition_with_anchor(pinn, eval_idx: np.ndarray, anchor_idx: np.nd
 def run_warm_start(best: Variant) -> pd.DataFrame:
     gkf = GroupKFold(n_splits=5)
     first = first_indices()
-    Xroll = fixed_anchor_matrix(PREV) if SELF_ANCHOR_BASELINE else tm.build_X(anchor_on=True)
-    Xfirst = fixed_anchor_matrix(first)
-    Xself = self_anchor_matrix() if SELF_ANCHOR_BASELINE else None
     pred_first_s = np.full((len(tm.df), 3), np.nan)
     pred_first_c = np.full((len(tm.df), 3), np.nan)
     pred_roll_s = np.full((len(tm.df), 3), np.nan)
@@ -573,9 +623,12 @@ def run_warm_start(best: Variant) -> pd.DataFrame:
         eval_idx = np.array([i for i in te_all if first[i] != i], dtype=int)
         eval_rows.extend(eval_idx.tolist())
         print(f"[state warm {fold}/5] eval={len(eval_idx)}", flush=True)
-        Xtr, _, _, imp, scl = scaled_matrices(tr, eval_idx, anchor_on=True)
-        Xtr_self = transform_indices(self_anchor_matrix(), imp, scl, tr) if SELF_ANCHOR_BASELINE else None
-        traj_data = make_trajectory_data(tr, imp, scl) if best.w_traj > 0 else None
+        Xtr, _, Xall, imp, scl = scaled_matrices(tr, eval_idx, anchor_on=True)
+        Xroll = fixed_anchor_matrix(PREV, Xall) if SELF_ANCHOR_BASELINE else Xall
+        Xfirst = fixed_anchor_matrix(first, Xall)
+        Xself = self_anchor_matrix(Xall) if SELF_ANCHOR_BASELINE else None
+        Xtr_self = transform_indices(Xself, imp, scl, tr) if SELF_ANCHOR_BASELINE else None
+        traj_data = make_trajectory_data(tr, imp, scl, Xall) if best.w_traj > 0 else None
         if traj_data is not None:
             print(f"[state warm {fold}/5] trajectory pairs={traj_data['n_pairs']}", flush=True)
         var = Variant(f"{best.name}_warm{fold}", best.w_phys, best.w_trans, SEED_OFFSET + fold - 1, best.w_traj)
@@ -617,6 +670,7 @@ def write_report(temporal: pd.DataFrame, best: Variant, scen_a: pd.DataFrame, wa
         "feature_tag": os.environ.get("SVECD_FEATURE_TAG", TAG),
         "multiband_anchor": os.environ.get("SVECD_MULTIBAND_ANCHOR", "0") == "1",
         "self_anchor_baseline": SELF_ANCHOR_BASELINE,
+        "split_local_dense": SPLIT_LOCAL_DENSE,
         "seed_offset": SEED_OFFSET,
         "trajectory_pair_mode": TRAJ_PAIR_MODE,
         "trajectory_max_pairs": TRAJ_MAX_PAIRS,
@@ -651,6 +705,7 @@ def write_temporal_report(temporal: pd.DataFrame, best: Variant) -> None:
         "run_parts": RUN_PARTS,
         "multiband_anchor": os.environ.get("SVECD_MULTIBAND_ANCHOR", "0") == "1",
         "self_anchor_baseline": SELF_ANCHOR_BASELINE,
+        "split_local_dense": SPLIT_LOCAL_DENSE,
         "seed_offset": SEED_OFFSET,
         "trajectory_pair_mode": TRAJ_PAIR_MODE,
         "trajectory_max_pairs": TRAJ_MAX_PAIRS,

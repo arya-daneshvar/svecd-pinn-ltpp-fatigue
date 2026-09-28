@@ -18,18 +18,18 @@ bins as sensitivity analysis. Subgroup intervals used section-cluster resampling
 ## Results
 
 The frozen PINN achieved temporal, cold-start, first-anchor, and rolling-anchor total-cracking R²log
-values of 0.789, 0.200, 0.517, and 0.749,
-respectively. Its temporal paired advantage over XGBoost was 0.039 (95% CI
--0.012 to 0.080), and the models were not distinguishable on this metric.
-XGBoost was better at cold start (PINN-oriented difference -0.239, 95% CI
--0.325 to -0.158). The PINN retained more R²log than boosting under severe
+values of 0.788, 0.188, 0.491, and 0.741,
+respectively. Its temporal paired advantage over XGBoost was 0.036 (95% CI
+-0.008 to 0.070), and the models were not distinguishable on this metric.
+XGBoost was better at cold start (PINN-oriented difference -0.253, 95% CI
+-0.342 to -0.163). The PINN retained more R²log than boosting under severe
 training-label noise, although it was not consistently best under moderate noise, anchor noise, or
 the combined degradation. Performance deteriorated with first-anchor horizon: PINN MAE rose from
-1.250% within 2 years to
-4.313% at 6–10 years. Error was highest for
-high-dominant observations (9.436% MAE), and
+1.335% within 2 years to
+4.212% at 6–10 years. Error was highest for
+high-dominant observations (9.676% MAE), and
 high-severity underprediction was frequent. PINN onset calibration was weaker than XGBoost
-(first-anchor Brier 0.264 versus 0.123).
+(first-anchor Brier 0.254 versus 0.123).
 
 ## Discussion
 

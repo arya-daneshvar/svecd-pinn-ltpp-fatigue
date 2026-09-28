@@ -1,12 +1,13 @@
 # Final validation test report
 
-Generated: 2026-07-13T06:00:09.341683+00:00
+Generated: 2026-09-28T16:08:06.262205+00:00
 
 | Test | Status | Major | Detail |
 |---|---|---:|---|
 | required inputs found | PASS | True |  |
 | temporal split rows disjoint | PASS | True |  |
 | section IDs separated in held-section protocols | PASS | True |  |
+| split-local dense reconstruction enabled | PASS | True |  |
 | preprocessing fitted on training only | PASS | True |  |
 | no test target used in fitting, imputation, corruption, or calibration | PASS | True |  |
 | bootstrap is clustered and multiplicity preserved | PASS | True |  |

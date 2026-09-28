@@ -31,5 +31,5 @@
   "bootstrap_replicates": 1000,
   "bootstrap_seed": 20260716,
   "catastrophic_threshold": "absolute total-cracking error >10 percentage points; prespecified as a large error on the 0-100% area scale",
-  "runtime_seconds": 348.6708929538727
+  "runtime_seconds": 343.28269481658936
 }

@@ -42,6 +42,7 @@ STATE_PINN_W_TOTAL=0.4
 STATE_PINN_W_ONSET=0.15
 STATE_PINN_W_CRACKED=0.5
 STATE_PINN_HUBER_DELTA=1.0
+STATE_PINN_SPLIT_LOCAL_DENSE=1
 ```
 
 ## Why This Model Was Frozen
@@ -51,14 +52,14 @@ The temporal-only baseline still has slightly stronger single-run temporal fit, 
 | model | temporal R2log | cold unseen R2log | first-anchor R2log | rolling-anchor R2log |
 |---|---:|---:|---:|---:|
 | baseline trajectory | 0.798 | 0.155 | 0.497 | 0.735 |
-| high_only | 0.789 | 0.200 | 0.517 | 0.749 |
+| high_only | 0.788 | 0.188 | 0.491 | 0.741 |
 
 Seed-stability means across five seeds:
 
 | model | temporal R2log | cold unseen R2log | first-anchor R2log | rolling-anchor R2log |
 |---|---:|---:|---:|---:|
 | baseline | 0.779 | 0.181 | 0.509 | 0.742 |
-| high_only | 0.780 | 0.174 | 0.521 | 0.746 |
+| high_only | 0.776 | 0.182 | 0.492 | 0.740 |
 
 High-severity anchored behavior is the main reason to prefer `high_only`:
 
@@ -105,6 +106,14 @@ python3 run_frozen_best.py --parts all --suffix _frozen_full
 
 The trainer does not currently serialize weights. This frozen reference is
 therefore a reproducible recipe and dataset freeze, not a saved checkpoint.
+
+Before every fit, the split is fixed and selected dense predictors are rebuilt from
+their `STRICT_` source columns with training rows only. The hierarchy is section,
+state-year, state, training-set global median, and a zero fallback only when the
+training split contains no finite value. Median imputation and standardization are
+then fitted on the training rows and applied unchanged to held-out rows. See
+`final_validation/SPLIT_LOCAL_PREPROCESSING_AUDIT.md` for the controlled comparison
+and the scope of the predictor-timing verification.
 
 ## Intended Use
 

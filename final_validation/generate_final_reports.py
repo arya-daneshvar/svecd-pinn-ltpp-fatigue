@@ -32,11 +32,12 @@ def main():
 ## Methodology
 
 The frozen pure S-VECD-informed severity-state PINN was evaluated without changing its architecture,
-features, loss weights, targets, splits, preprocessing, anchor rewriting, or seeds. The model-ready
+features, loss weights, targets, splits, anchor rewriting, or seeds. Preprocessing was corrected so
+that dense-field completion, median imputation, and scaling use training rows only. The model-ready
 dataset contains 2,285 rows from 326 sections. Targets are disjoint low-, moderate-, and high-severity
 cracking area percentages; total cracking is their sum. The exact headline metric is R² on `log1p`
 total cracking. Onset is observed total cracking >0%; the PINN probability is its frozen BCE-trained
-onset head. Median imputation and scaling were fitted on training rows only.
+onset head. Split-specific transformations were applied unchanged to held-out rows.
 
 Uncertainty used 2,000 paired percentile bootstrap replicates (seed {BOOTSTRAP_SEED}), sampling
 sections with replacement and retaining every row with cluster multiplicity. All paired comparisons
@@ -68,7 +69,7 @@ but worse raw MAE, so it does not replace the pure PINN result.
 ## Reduced and degraded data robustness
 
 The row-level rerun confirmed the earlier limited-section pattern: at 100%, 50%, 20%, and 10%
-training sections, mean PINN R²log values were 0.789, 0.775, 0.751, and 0.757; corresponding
+training sections, mean PINN R²log values were 0.788, 0.766, 0.751, and 0.746; corresponding
 XGBoost values were 0.750, 0.691, 0.580, and 0.457. Complete distributions and section intervals are reported in
 `outputs_bootstrap_uncertainty`. This is supportive evidence about anchored low-data learning, not
 cold-start generalization.

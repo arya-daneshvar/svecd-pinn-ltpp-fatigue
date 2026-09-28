@@ -33,19 +33,20 @@
     "STATE_PINN_W_ONSET": "0.15",
     "STATE_PINN_W_CRACKED": "0.5",
     "STATE_PINN_HUBER_DELTA": "1.0",
+    "STATE_PINN_SPLIT_LOCAL_DENSE": "1",
     "OMP_NUM_THREADS": "1"
   },
   "selected_single_run_metrics": {
-    "temporal_R2log_total": 0.7887468934059143,
-    "cold_unseen_R2log_total": 0.1999956301986485,
-    "first_anchor_R2log_total": 0.5167743542579937,
-    "rolling_anchor_R2log_total": 0.749352728304661
+    "temporal_R2log_total": 0.7877207398414612,
+    "cold_unseen_R2log_total": 0.1880963945105198,
+    "first_anchor_R2log_total": 0.4914781069690842,
+    "rolling_anchor_R2log_total": 0.7412782776779263
   },
   "seed_stability_mean_metrics": {
-    "temporal_R2log_total": 0.7799473524093627,
-    "cold_unseen_R2log_total": 0.17430223706630538,
-    "first_anchor_R2log_total": 0.5209922611710165,
-    "rolling_anchor_R2log_total": 0.7458058917022876
+    "temporal_R2log_total": 0.7760372996330261,
+    "cold_unseen_R2log_total": 0.1820501036781245,
+    "first_anchor_R2log_total": 0.4921165887443361,
+    "rolling_anchor_R2log_total": 0.7397070323376445
   },
   "notes": [
     "Trainer does not serialize weights; this is a reproducible frozen recipe plus dataset, not a checkpoint.",
@@ -53,4 +54,3 @@
     "data_cache/ANALYSIS_DIS_AC.csv is included so the final severity-state target maker can be audited/re-run from the dense source dataset."
   ]
 }
-

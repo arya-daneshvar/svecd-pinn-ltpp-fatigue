@@ -3,11 +3,12 @@
 ## Methodology
 
 The frozen pure S-VECD-informed severity-state PINN was evaluated without changing its architecture,
-features, loss weights, targets, splits, preprocessing, anchor rewriting, or seeds. The model-ready
+features, loss weights, targets, splits, anchor rewriting, or seeds. Preprocessing was corrected so
+that dense-field completion, median imputation, and scaling use training rows only. The model-ready
 dataset contains 2,285 rows from 326 sections. Targets are disjoint low-, moderate-, and high-severity
 cracking area percentages; total cracking is their sum. The exact headline metric is R² on `log1p`
 total cracking. Onset is observed total cracking >0%; the PINN probability is its frozen BCE-trained
-onset head. Median imputation and scaling were fitted on training rows only.
+onset head. Split-specific transformations were applied unchanged to held-out rows.
 
 Uncertainty used 2,000 paired percentile bootstrap replicates (seed 20260714), sampling
 sections with replacement and retaining every row with cluster multiplicity. All paired comparisons
@@ -21,16 +22,16 @@ traffic and 50% climate masking). Clean-training imputers were retained for infe
 
 ## Predictive accuracy and statistical uncertainty
 
-Frozen PINN total R²log was 0.789 (95% CI 0.685–0.861)
-for temporal anchoring, 0.200 (0.110–0.270) for cold start,
-0.517 (0.420–0.601) for first-anchor, and
-0.749 (0.705–0.786) for rolling-anchor prediction.
+Frozen PINN total R²log was 0.788 (95% CI 0.687–0.862)
+for temporal anchoring, 0.188 (0.101–0.257) for cold start,
+0.491 (0.385–0.581) for first-anchor, and
+0.741 (0.693–0.782) for rolling-anchor prediction.
 
-Against XGBoost, PINN-oriented paired R²log differences were 0.039
-(-0.012–0.080) temporally, -0.239
-(-0.325–-0.158) at cold start, -0.055
-(-0.136–0.027) for first anchor, and 0.030
-(-0.008–0.074) for rolling anchor. Thus the temporal, first-anchor, and
+Against XGBoost, PINN-oriented paired R²log differences were 0.036
+(-0.008–0.070) temporally, -0.253
+(-0.342–-0.163) at cold start, -0.080
+(-0.179–0.010) for first anchor, and 0.020
+(-0.021–0.069) for rolling anchor. Thus the temporal, first-anchor, and
 rolling-anchor R²log differences versus XGBoost did not exclude zero; XGBoost was clearly better at
 cold start. The PINN exceeded anchored persistence for temporal and rolling R²log with paired
 intervals excluding zero. The secondary residual hybrid achieved a small temporal R²log improvement
@@ -39,7 +40,7 @@ but worse raw MAE, so it does not replace the pure PINN result.
 ## Reduced and degraded data robustness
 
 The row-level rerun confirmed the earlier limited-section pattern: at 100%, 50%, 20%, and 10%
-training sections, mean PINN R²log values were 0.789, 0.775, 0.751, and 0.757; corresponding
+training sections, mean PINN R²log values were 0.788, 0.766, 0.751, and 0.746; corresponding
 XGBoost values were 0.750, 0.691, 0.580, and 0.457. Complete distributions and section intervals are reported in
 `outputs_bootstrap_uncertainty`. This is supportive evidence about anchored low-data learning, not
 cold-start generalization.
@@ -61,19 +62,19 @@ uniformly more robust to noisy or missing operational data.
 
 ## Calibration and reliability
 
-First-anchor PINN MAE increased from 1.250% at ≤2 years to
-4.313% at 6–10 years; high-severity MAE was largest beyond
-10 years (2.190%). By observed condition, first-anchor total
-MAE was 0.687% for no cracking,
+First-anchor PINN MAE increased from 1.335% at ≤2 years to
+4.212% at 6–10 years; high-severity MAE was largest beyond
+10 years (2.309%). By observed condition, first-anchor total
+MAE was 0.855% for no cracking,
 8.133% for moderate-dominant, and
-9.436% for high-dominant observations. Mean signed
+9.676% for high-dominant observations. Mean signed
 error was negative in cracked severity groups, demonstrating systematic underprediction.
 
-First-anchor onset calibration was weak for the PINN (Brier 0.264, ECE 0.237,
-slope 0.219) compared with XGBoost (Brier 0.123, ECE
-0.018, slope 1.033). Among 79 high-dominant
-first-anchor observations, the PINN underpredicted the high state in 91.1%
-and had a 10.0% rate of absolute total error >10 percentage points.
+First-anchor onset calibration was weak for the PINN (Brier 0.254, ECE 0.235,
+slope 0.222) compared with XGBoost (Brier 0.123, ECE
+0.020, slope 1.029). Among 79 high-dominant
+first-anchor observations, the PINN underpredicted the high state in 92.4%
+and had a 9.7% rate of absolute total error >10 percentage points.
 
 ## Negative findings and limitations
 

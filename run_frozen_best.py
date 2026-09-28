@@ -49,6 +49,7 @@ def main() -> None:
         "STATE_PINN_W_ONSET": "0.15",
         "STATE_PINN_W_CRACKED": "0.5",
         "STATE_PINN_HUBER_DELTA": "1.0",
+        "STATE_PINN_SPLIT_LOCAL_DENSE": "1",
         "SVECD_ANCHOR": "1",
         "SVECD_HYBRID": "0",
         "SVECD_ENSEMBLE": "1",
@@ -59,4 +60,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -51,3 +51,41 @@
 2026-07-13T05:49:39.433934+00:00	reliability complete runtime=348.7s
 2026-07-13T05:52:35.199563+00:00	bootstrap complete runtime=105.1s
 2026-07-13T05:58:46.851917+00:00	bootstrap complete runtime=105.7s
+2026-09-28T15:43:01.702901+00:00	prediction protocol start temporal
+2026-09-28T15:43:27.644701+00:00	prediction protocol complete temporal
+2026-09-28T15:43:27.645126+00:00	prediction protocol start cold_start
+2026-09-28T15:44:13.687923+00:00	prediction protocol complete cold_start
+2026-09-28T15:44:13.688839+00:00	prediction protocol start first_anchor
+2026-09-28T15:46:05.614945+00:00	prediction protocol complete first_anchor
+2026-09-28T15:46:05.616470+00:00	prediction protocol start rolling_anchor
+2026-09-28T15:47:58.250382+00:00	prediction protocol complete rolling_anchor
+2026-09-28T15:48:18.818178+00:00	limited start fraction=1.0 repeat=0 nsec=326
+2026-09-28T15:48:42.555844+00:00	limited complete fraction=1.0 repeat=0
+2026-09-28T15:48:42.560190+00:00	limited start fraction=0.5 repeat=0 nsec=163
+2026-09-28T15:48:55.805035+00:00	limited complete fraction=0.5 repeat=0
+2026-09-28T15:48:55.808564+00:00	limited start fraction=0.5 repeat=1 nsec=163
+2026-09-28T15:49:08.615992+00:00	limited complete fraction=0.5 repeat=1
+2026-09-28T15:49:08.618914+00:00	limited start fraction=0.5 repeat=2 nsec=163
+2026-09-28T15:49:22.682811+00:00	limited complete fraction=0.5 repeat=2
+2026-09-28T15:49:22.684412+00:00	limited start fraction=0.2 repeat=0 nsec=66
+2026-09-28T15:49:30.196769+00:00	limited complete fraction=0.2 repeat=0
+2026-09-28T15:49:30.198151+00:00	limited start fraction=0.2 repeat=1 nsec=66
+2026-09-28T15:49:38.265144+00:00	limited complete fraction=0.2 repeat=1
+2026-09-28T15:49:38.268728+00:00	limited start fraction=0.2 repeat=2 nsec=66
+2026-09-28T15:49:45.116460+00:00	limited complete fraction=0.2 repeat=2
+2026-09-28T15:49:45.117412+00:00	limited start fraction=0.1 repeat=0 nsec=33
+2026-09-28T15:49:50.412400+00:00	limited complete fraction=0.1 repeat=0
+2026-09-28T15:49:50.413329+00:00	limited start fraction=0.1 repeat=1 nsec=33
+2026-09-28T15:49:54.912389+00:00	limited complete fraction=0.1 repeat=1
+2026-09-28T15:49:54.913233+00:00	limited start fraction=0.1 repeat=2 nsec=33
+2026-09-28T15:50:00.415263+00:00	limited complete fraction=0.1 repeat=2
+2026-09-28T15:50:18.609271+00:00	prediction protocol start temporal
+2026-09-28T15:50:45.965547+00:00	prediction protocol complete temporal
+2026-09-28T15:50:45.966043+00:00	prediction protocol start cold_start
+2026-09-28T15:51:34.213445+00:00	prediction protocol complete cold_start
+2026-09-28T15:51:34.214449+00:00	prediction protocol start first_anchor
+2026-09-28T15:52:12.908627+00:00	bootstrap complete runtime=114.3s
+2026-09-28T15:53:31.981379+00:00	prediction protocol complete first_anchor
+2026-09-28T15:53:31.981675+00:00	prediction protocol start rolling_anchor
+2026-09-28T15:55:23.615339+00:00	prediction protocol complete rolling_anchor
+2026-09-28T15:56:01.892849+00:00	reliability complete runtime=343.3s

@@ -27,6 +27,8 @@ needing the larger local thesis workspace.
 - Trajectory loss: all prior/future pairs, `w_traj=0.25`
 - Physics weight: `w_phys=0.10`
 - Transition weight: `w_trans=2`
+- Dense-field completion: split-local, using training rows only
+- Median imputation and standardization: fitted on training rows only
 
 See [FROZEN_MODEL_CARD.md](FROZEN_MODEL_CARD.md),
 [ARTIFACT_MANIFEST.md](ARTIFACT_MANIFEST.md), and
@@ -38,18 +40,20 @@ Single full-validation run:
 
 | model | temporal R2log | cold unseen R2log | first-anchor R2log | rolling-anchor R2log |
 |---|---:|---:|---:|---:|
-| frozen severity-aware PINN | 0.789 | 0.200 | 0.517 | 0.749 |
+| frozen severity-aware PINN | 0.788 | 0.188 | 0.491 | 0.741 |
 
 Seed-stability mean across five seeds:
 
 | model | temporal R2log | cold unseen R2log | first-anchor R2log | rolling-anchor R2log |
 |---|---:|---:|---:|---:|
-| frozen severity-aware PINN | 0.780 | 0.174 | 0.521 | 0.746 |
+| frozen severity-aware PINN | 0.776 | 0.182 | 0.492 | 0.740 |
 
 Detailed frozen-run outputs are in `outputs/`. The `final_validation/` directory
 contains row-level out-of-sample predictions, uncertainty summaries, robustness
 and reliability analyses, publication figures, and the scripts used to generate
-them. Supporting experiment and equation-audit reports are in `reports/`.
+them. The split-local correction and controlled comparison are documented in
+`final_validation/SPLIT_LOCAL_PREPROCESSING_AUDIT.md`. Supporting experiment and
+equation-audit reports are in `reports/`.
 
 ## Repository Layout
 
